@@ -93,30 +93,16 @@ void main() {
     vec2 newUV = (vUv - vec2(0.5)) * resolution.zw + vec2(0.5);
     vec3 cameraPos = vec3(0.0, 0.0, 5.0);
     vec3 ray = normalize(vec3((vUv - vec2(0.5)) * resolution.zw, -1));
-    
-    // Define colors - purple bulbs with white outline
-    vec3 bulbColor = vec3(159.0/255.0, 51.0/255.0, 210.0/255.0);  // #9F33D2 (purple)
-    vec3 outlineColor = vec3(1.0, 1.0, 1.0);  // White
+    vec3 color = vec3(1.0);
     
     float t = rayMarch(cameraPos, ray);
     if (t > 0.0) {
         vec3 p = cameraPos + ray * t;
         vec3 normal = getNormal(p);
         float fresnel = pow(1.0 + dot(ray, normal), 3.0);
-        
-        // Create sharper transition for more defined outline
-        float outlineEffect = pow(fresnel, 4.0);
-        
-        // Mix purple bulbs with white outline
-        vec3 color = mix(bulbColor, outlineColor, outlineEffect);
-        
-        // Calculate opacity - make the bulbs semi-transparent
-        // Center is more transparent, edges are more opaque
-        float opacity = mix(0.6, 0.9, outlineEffect);
-        
-        gl_FragColor = vec4(color, opacity);
+        color = vec3(0.1, 0.1, 0.1);
+        gl_FragColor = vec4(color, 0.8);
     } else {
-        // Transparent background
         gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
     }
 }
@@ -164,6 +150,7 @@ function LavaLampShader() {
 				uniforms={uniforms}
 				vertexShader={vertexShader}
 				fragmentShader={fragmentShader}
+				transparent={true}
 			/>
 		</mesh>
 	)
@@ -175,8 +162,9 @@ export const LavaLamp = () => {
 			style={{
 				width: '100%',
 				height: '100%',
-				background: 'transparent',
 				position: 'absolute',
+				zIndex: 1,
+				mixBlendMode: 'difference',
 			}}
 		>
 			<Canvas
@@ -190,7 +178,10 @@ export const LavaLamp = () => {
 					position: [0, 0, 2],
 				}}
 				orthographic
-				gl={{ antialias: true, alpha: true }}
+				gl={{
+					antialias: true,
+					alpha: true,
+				}}
 			>
 				<LavaLampShader />
 			</Canvas>

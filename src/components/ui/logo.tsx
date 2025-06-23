@@ -1,11 +1,11 @@
 import Link from 'next/link'
 
-export function Logo() {
+export function Logo({ width = 200, height = 45 }: { width?: number; height?: number }) {
 	return (
 		<Link href='/'>
 			<svg
-				width='193'
-				height='45'
+				width={width}
+				height={height}
 				viewBox='0 0 193 45'
 				fill='none'
 				xmlns='http://www.w3.org/2000/svg'
