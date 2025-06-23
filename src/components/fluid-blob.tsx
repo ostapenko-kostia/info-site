@@ -111,36 +111,21 @@ void main() {
 function LavaLampShader() {
 	const meshRef = useRef<THREE.Mesh>(null)
 	const { size } = useThree()
+	const timeRef = useRef(0)
 
-	const uniforms = useMemo(
-		() => ({
-			time: { value: 0 },
-			resolution: { value: new THREE.Vector4() },
-		}),
-		[]
-	)
-
-	// Update resolution when size changes
-	React.useEffect(() => {
-		const { width, height } = size
-		const imageAspect = 1
-		let a1, a2
-
-		if (height / width > imageAspect) {
-			a1 = (width / height) * imageAspect
-			a2 = 1
-		} else {
-			a1 = 1
-			a2 = height / width / imageAspect
-		}
-
-		uniforms.resolution.value.set(width, height, a1, a2)
-	}, [size, uniforms])
+	const uniforms = useRef({
+		time: { value: 0 },
+		resolution: { value: new THREE.Vector4() },
+	}).current
 
 	useFrame(state => {
-		if (meshRef.current) {
-			uniforms.time.value = state.clock.elapsedTime
-		}
+		timeRef.current = state.clock.elapsedTime
+		uniforms.time.value = timeRef.current
+
+		const { width, height } = size
+		const aspectX = width / height
+		const aspectY = height / width
+		uniforms.resolution.value.set(width, height, aspectX, aspectY)
 	})
 
 	return (
@@ -150,41 +135,28 @@ function LavaLampShader() {
 				uniforms={uniforms}
 				vertexShader={vertexShader}
 				fragmentShader={fragmentShader}
-				transparent={true}
+				transparent
 			/>
 		</mesh>
 	)
 }
 
-export const LavaLamp = () => {
-	return (
-		<div
-			style={{
-				width: '100%',
-				height: '100%',
-				position: 'absolute',
-				zIndex: 1,
-				mixBlendMode: 'difference',
+export const LavaLamp = () => (
+	<div className='lava-background'>
+		<Canvas
+			camera={{
+				left: -0.5,
+				right: 0.5,
+				top: 0.5,
+				bottom: -0.5,
+				near: -1000,
+				far: 1000,
+				position: [0, 0, 2],
 			}}
+			orthographic
+			gl={{ antialias: true, alpha: true }}
 		>
-			<Canvas
-				camera={{
-					left: -0.5,
-					right: 0.5,
-					top: 0.5,
-					bottom: -0.5,
-					near: -1000,
-					far: 1000,
-					position: [0, 0, 2],
-				}}
-				orthographic
-				gl={{
-					antialias: true,
-					alpha: true,
-				}}
-			>
-				<LavaLampShader />
-			</Canvas>
-		</div>
-	)
-}
+			<LavaLampShader />
+		</Canvas>
+	</div>
+)
