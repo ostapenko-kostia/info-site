@@ -1,7 +1,8 @@
+// components/fluid-blob.tsx
 'use client'
 
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import React, { useMemo, useRef } from 'react'
+import { Canvas, useFrame, useThree, invalidate } from '@react-three/fiber'
+import { useRef } from 'react'
 import * as THREE from 'three'
 
 const vertexShader = `
@@ -12,11 +13,9 @@ uniform vec4 resolution;
 void main() {
     vUv = uv;
     gl_Position = vec4(position, 1.0);
-}
-`
+}`
 
-const fragmentShader = `
-precision highp float;
+const fragmentShader = `precision highp float;
 varying vec2 vUv;
 uniform float time;
 uniform vec4 resolution;
@@ -39,10 +38,10 @@ vec3 rotate(vec3 v, vec3 axis, float angle) {
     return (m * vec4(v, 1.0)).xyz;
 }
 
-float smin( float a, float b, float k ) {
+float smin(float a, float b, float k) {
     k *= 6.0;
-    float h = max( k-abs(a-b), 0.0 )/k;
-    return min(a,b) - h*h*h*k*(1.0/6.0);
+    float h = max(k - abs(a - b), 0.0) / k;
+    return min(a, b) - h * h * h * k * (1.0 / 6.0);
 }
 
 float sphereSDF(vec3 p, float r) {
@@ -50,11 +49,11 @@ float sphereSDF(vec3 p, float r) {
 }
 
 float sdf(vec3 p) {
-    vec3 p1 = rotate(p, vec3(0.0, 0.0, 1.0), time/5.0);
-    vec3 p2 = rotate(p, vec3(1.), -time/5.0);
-    vec3 p3 = rotate(p, vec3(1., 1., 0.), -time/4.5);
-    vec3 p4 = rotate(p, vec3(0., 1., 0.), -time/4.0);
-    
+    vec3 p1 = rotate(p, vec3(0.0, 0.0, 1.0), time / 5.0);
+    vec3 p2 = rotate(p, vec3(1.0), -time / 5.0);
+    vec3 p3 = rotate(p, vec3(1.0, 1.0, 0.0), -time / 4.5);
+    vec3 p4 = rotate(p, vec3(0.0, 1.0, 0.0), -time / 4.0);
+
     float final = sphereSDF(p1 - vec3(-0.5, 0.0, 0.0), 0.35);
     float nextSphere = sphereSDF(p2 - vec3(0.55, 0.0, 0.0), 0.3);
     final = smin(final, nextSphere, 0.1);
@@ -64,7 +63,7 @@ float sdf(vec3 p) {
     final = smin(final, nextSphere, 0.1);
     nextSphere = sphereSDF(p4 - vec3(0.45, -0.45, 0.0), 0.15);
     final = smin(final, nextSphere, 0.1);
-    
+
     return final;
 }
 
@@ -77,10 +76,10 @@ vec3 getNormal(vec3 p) {
     ));
 }
 
-float rayMarch(vec3 rayOrigin, vec3 ray) {
+float rayMarch(vec3 ro, vec3 rd) {
     float t = 0.0;
     for (int i = 0; i < 100; i++) {
-        vec3 p = rayOrigin + ray * t;
+        vec3 p = ro + t * rd;
         float d = sdf(p);
         if (d < 0.001) return t;
         t += d;
@@ -91,27 +90,28 @@ float rayMarch(vec3 rayOrigin, vec3 ray) {
 
 void main() {
     vec2 newUV = (vUv - vec2(0.5)) * resolution.zw + vec2(0.5);
-    vec3 cameraPos = vec3(0.0, 0.0, 5.0);
-    vec3 ray = normalize(vec3((vUv - vec2(0.5)) * resolution.zw, -1));
-    vec3 color = vec3(1.0);
-    
-    float t = rayMarch(cameraPos, ray);
+    vec3 ro = vec3(0.0, 0.0, 5.0);
+    vec3 rd = normalize(vec3((vUv - vec2(0.5)) * resolution.zw, -1.0));
+    vec3 color = vec3(0.0);
+
+    float t = rayMarch(ro, rd);
     if (t > 0.0) {
-        vec3 p = cameraPos + ray * t;
-        vec3 normal = getNormal(p);
-        float fresnel = pow(1.0 + dot(ray, normal), 3.0);
-        color = vec3(0.1, 0.1, 0.1);
-        gl_FragColor = vec4(color, 0.8);
+      vec3 p = ro + rd * t;
+      vec3 normal = getNormal(p);
+      float fresnel = pow(1.0 + dot(rd, normal), 3.0);
+      float brightness = 0.2 + 0.8 * fresnel;
+      vec3 color = vec3(0.0);
+      gl_FragColor = vec4(color + brightness * 0.1, 0.6);
     } else {
-        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+      gl_FragColor = vec4(0.0);
     }
+
 }
 `
 
 function LavaLampShader() {
 	const meshRef = useRef<THREE.Mesh>(null)
 	const { size } = useThree()
-	const timeRef = useRef(0)
 
 	const uniforms = useRef({
 		time: { value: 0 },
@@ -119,13 +119,14 @@ function LavaLampShader() {
 	}).current
 
 	useFrame(state => {
-		timeRef.current = state.clock.elapsedTime
-		uniforms.time.value = timeRef.current
+		uniforms.time.value = state.clock.elapsedTime
 
 		const { width, height } = size
 		const aspectX = width / height
 		const aspectY = height / width
 		uniforms.resolution.value.set(width, height, aspectX, aspectY)
+
+		invalidate()
 	})
 
 	return (
@@ -144,16 +145,18 @@ function LavaLampShader() {
 export const LavaLamp = () => (
 	<div className='lava-background'>
 		<Canvas
+			frameloop='demand'
+			dpr={[1, 1.5]}
+			orthographic
 			camera={{
-				left: -0.5,
-				right: 0.5,
-				top: 0.5,
-				bottom: -0.5,
-				near: -1000,
-				far: 1000,
+				left: -1,
+				right: 1,
+				top: 1,
+				bottom: -1,
+				near: -10,
+				far: 10,
 				position: [0, 0, 2],
 			}}
-			orthographic
 			gl={{ antialias: true, alpha: true }}
 		>
 			<LavaLampShader />

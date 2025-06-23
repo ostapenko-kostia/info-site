@@ -7,7 +7,7 @@ const LavaLamp = lazy(() => import('../fluid-blob').then(mod => ({ default: mod.
 export function Hero() {
 	return (
 		<section className="relative w-full min-h-screen">
-			<Suspense fallback={null}>
+			<Suspense fallback={<div className="absolute inset-0 bg-white"></div>}>
 				<LavaLamp />
 			</Suspense>
 
