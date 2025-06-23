@@ -1,15 +1,15 @@
-import { Suspense, lazy } from 'react'
+// import { Suspense, lazy } from 'react'
 import { Container } from '../layout/container'
 import { Button } from '../ui/button'
 
-const LavaLamp = lazy(() => import('../fluid-blob').then(mod => ({ default: mod.LavaLamp })))
+// const LavaLamp = lazy(() => import('../fluid-blob').then(mod => ({ default: mod.LavaLamp })))
 
 export function Hero() {
 	return (
 		<section className="relative w-full min-h-screen">
-			<Suspense fallback={<div className="absolute inset-0 bg-white"></div>}>
+			{/* <Suspense fallback={<div className="absolute inset-0 bg-white"></div>}>
 				<LavaLamp />
-			</Suspense>
+			</Suspense> */}
 
 			<Container className="flex flex-col items-center justify-center gap-9 min-h-screen py-[82px] relative z-10">
 				<div className="flex flex-col items-center justify-center gap-8">
