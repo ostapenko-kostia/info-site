@@ -12,10 +12,10 @@ export function Button({
 	return (
 		<button
 			className={cn(
-				'rounded-3xl border border-[#D9D9D9] py-3 px-6 hover:bg-[#D9D9D9] transition-colors duration-300 font-semibold',
+				'rounded-3xl border border-[#D9D9D9] py-3 px-6 transition-transform duration-300 font-semibold text-sm hover:scale-105',
 				className,
 				{
-					'text-white bg-gradient-to-r from-[#9F33D2] to-[#3B82F6] border-none hover:from-[#3B82F6]/70 hover:to-[#9F33D2]/70':
+					'text-white bg-gradient-to-r from-[#9F33D2] to-[#3B82F6] border-none':
 						variant === 'primary',
 				}
 			)}

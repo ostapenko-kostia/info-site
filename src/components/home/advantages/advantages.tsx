@@ -13,7 +13,7 @@ export function Advantages() {
 					{ADVANTAGES.map(advantage => (
 						<article key={advantage.id} className='space-y-2'>
 							<h4 className='font-bold text-lg'>{advantage.title}</h4>
-							<p className='text-sm'>{advantage.description}</p>
+							<p className='tepxt-sm'>{advantage.description}</p>
 						</article>
 					))}
 				</section>

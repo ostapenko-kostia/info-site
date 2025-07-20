@@ -4,7 +4,7 @@ import Link from 'next/link'
 export function HeaderNav() {
 	return (
 		<nav>
-			<ul className='flex items-center gap-12 font-semibold'>
+			<ul className='flex items-center gap-12 font-semibold text-sm'>
 				<li>
 					<button className='flex items-center gap-4'>
 						Продукт
