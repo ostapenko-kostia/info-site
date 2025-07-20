@@ -1,6 +1,11 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+/* Fallback for exclusion effect on mobile/Safari if needed */
+.exclusion-fallback {
+  /* You can add fallback styles here if you want to override for unsupported browsers */
+}
+
 @custom-variant dark (&:is(.dark *));
 
 * {

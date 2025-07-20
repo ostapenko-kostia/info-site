@@ -35,7 +35,7 @@ function HeaderMenu({
 
 export function Header() {
 	return (
-		<header className='fixed top-0 left-0 right-0 z-50 bg-white/90'>
+		<header className='fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg'>
 			<Container className='py-4 flex items-center justify-between gap-10'>
 				<Logo width={150} height={35} />
 
