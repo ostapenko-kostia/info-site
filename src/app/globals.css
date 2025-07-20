@@ -127,6 +127,10 @@ button {
 	}
 }
 
+body {
+	color: #262626;
+}
+
 .lava-background {
 	position: absolute;
 	width: 100%;
