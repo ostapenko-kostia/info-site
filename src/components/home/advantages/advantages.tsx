@@ -10,12 +10,12 @@ export function Advantages() {
 					<h2 className='font-bold text-4xl'>Рішення</h2>
 					<h3 className='font-medium text-lg'>Тільки те, що дійсно потрібно</h3>
 				</header>
-				<section className='grid grid-cols-3 mt-14 gap-y-24 max-lg:grid-cols-2 max-lg:text-center max-sm:grid-cols-1'>
+				<section className='grid grid-cols-3 mt-14 max-lg:grid-cols-2 max-lg:text-center max-sm:grid-cols-1'>
 					{ADVANTAGES.map((advantage, index) => (
 						<article
 							key={advantage.id}
 							className={cn(
-								'flex flex-col lg:border-r  py-10 relative group/feature dark:border-neutral-800',
+								'flex flex-col lg:border-r py-10 relative group/feature dark:border-neutral-800',
 								(index === 0 || index === 4) &&
 									'lg:border-l dark:border-neutral-800',
 								index < 4 && 'lg:border-b dark:border-neutral-800'
