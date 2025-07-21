@@ -7,8 +7,8 @@ export function Advantages() {
 		<section>
 			<Container>
 				<header className='text-center space-y-3'>
-					<h2 className='font-bold text-4xl'>Рішення</h2>
-					<h3 className='font-medium text-lg'>Тільки те, що дійсно потрібно</h3>
+					<h2 className='font-bold text-4xl max-sm:text-2xl'>Рішення</h2>
+					<h3 className='font-medium text-lg max-sm:text-base'>Тільки те, що дійсно потрібно</h3>
 				</header>
 				<section className='grid grid-cols-3 mt-14 max-lg:grid-cols-2 max-lg:text-center max-sm:grid-cols-1'>
 					{ADVANTAGES.map((advantage, index) => (
