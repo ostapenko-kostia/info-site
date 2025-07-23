@@ -11,17 +11,20 @@ export function Hero() {
 					Керуй
 					<RotatingText
 						texts={['командою', 'процесами', 'завданнями']}
-						mainClassName='px-2 sm:px-2 md:px-3 bg-[linear-gradient(90deg,_#5C2DBB_0%,_#1566EA_100%)] text-white overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg'
-						staggerFrom={'last'}
-						staggerDuration={0.025}
-						splitLevelClassName='overflow-hidden pb-0.5 sm:pb-1 md:pb-1'
-						transition={{ type: 'spring', damping: 30, stiffness: 400 }}
+						mainClassName='px-2 sm:px-2 md:px-3 bg-[linear-gradient(90deg,_#5C2DBB_0%,_#1566EA_100%)] text-white overflow-hidden py-0.5 sm:py-1 md:py-2 rounded-lg'
+						transition={{
+							type: 'spring',
+							damping: 30,
+							stiffness: 400,
+							layout: { duration: 0.3 },
+						}}
 						rotationInterval={2000}
 					/>
 				</h1>
 				<p className='text-lg font-medium text-center max-w-2/3 max-sm:max-w-full max-sm:text-base text-white'>
 					Все необхідне для управління проєктами в одному зрозумілому
-					інтерфейсі. Для команд будь-якого розміру й досвіду.
+					інтерфейсі.
+					<br /> Для команд будь-якого розміру й досвіду.
 				</p>
 				<div className='flex flex-col items-center justify-center gap-2'>
 					<Button variant='white'>Почати, це безкоштовно!</Button>
