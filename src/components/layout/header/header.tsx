@@ -1,33 +1,63 @@
 import { GlobeIcon, MenuIcon } from 'lucide-react'
-import { Logo } from '../../ui/logo'
-import { Container } from '../container'
-import { HeaderNav } from './header-nav'
 import { Button } from '../../ui/button'
 import {
 	Dialog,
 	DialogContent,
-	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from '../../ui/dialog'
-import { cn } from '@/lib/utils'
+import { Logo } from '../../ui/logo'
+import { HeaderNav } from './header-nav'
 
 function HeaderMenu({
 	className,
-	buttonsClassName,
+	navClassName,
+	variant = 'default',
 }: {
 	className?: string
-	buttonsClassName?: string
+	navClassName?: string
+	variant?: 'default' | 'mobile'
 }) {
+	if (variant === 'mobile') {
+		return (
+			<div className={`flex flex-col w-full gap-6 ${className}`}>
+				<div className='flex flex-col space-y-6'>
+					<HeaderNav className={`text-lg ${navClassName}`} />
+					<button className='flex items-center gap-2 text-white'>
+						<GlobeIcon />
+					</button>
+				</div>
+				<div className='flex flex-col w-full gap-3'>
+					<Button variant='ghost' size='slim' className='w-full justify-center'>
+						Увійти
+					</Button>
+					<Button
+						variant='primary'
+						size='slim'
+						className='w-full justify-center'
+					>
+						Реєстрація
+					</Button>
+				</div>
+			</div>
+		)
+	}
+
 	return (
-		<div className={cn('flex items-center gap-14', className)}>
-			<HeaderNav />
-			<button>
-				<GlobeIcon />
-			</button>
-			<div className={cn('flex items-center gap-8', buttonsClassName)}>
-				<Button>Увійти</Button>
-				<Button variant='primary'>Реєстрація</Button>
+		<div className={`contents ${className}`}>
+			<div className='bg-white/5 rounded-[50px] backdrop-blur-md border border-white/20 h-full px-5 flex items-center gap-10'>
+				<HeaderNav className={`[&_ul]:max-xl:gap-5 ${navClassName}`} />
+				<button>
+					<GlobeIcon color='#fff' />
+				</button>
+			</div>
+			<div className='flex items-center text-white bg-white/5 rounded-[50px] backdrop-blur-md border border-white/20 h-full px-5'>
+				<Button variant='ghost' size='slim'>
+					Увійти
+				</Button>
+				<Button variant='primary' size='slim'>
+					Реєстрація
+				</Button>
 			</div>
 		</div>
 	)
@@ -35,29 +65,36 @@ function HeaderMenu({
 
 export function Header() {
 	return (
-		<header className='fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg'>
-			<Container className='py-4 flex items-center justify-between gap-10'>
-				<Logo width={150} height={35} />
+		<header className='fixed top-[2em] left-0 right-0 z-50 mx-auto w-[90%] flex items-center justify-between h-[60px] gap-5 max-xl:gap-3'>
+			<div className='bg-white/5 rounded-[50px] backdrop-blur-md border border-white/20 px-5 h-full flex items-center gap-5'>
+				<Logo height={32} width={140} />
+				<hr className='w-[1px] h-[80%] bg-[#676767] border-none max-[420px]:hidden' />
+				<span className='font-semibold text-xs text-white max-[420px]:hidden'>
+					Simply in
+					<br /> control
+				</span>
+			</div>
 
-				<Dialog>
-					<DialogTrigger asChild>
-						<Button className='lg:hidden p-3 rounded-lg'>
+			<div className='flex items-center h-full gap-5 max-xl:gap-3 max-lg:hidden'>
+				<HeaderMenu />
+			</div>
+
+			<Dialog>
+				<DialogTrigger className='h-full lg:hidden' asChild>
+					<div className='bg-white/5 rounded-[50px] backdrop-blur-md border border-white/20 h-full flex items-center'>
+						<Button variant='ghost'>
 							<MenuIcon />
 						</Button>
-					</DialogTrigger>
-					<DialogContent>
-						<DialogHeader>
-							<DialogTitle>Меню</DialogTitle>
-						</DialogHeader>
-						<HeaderMenu
-							className='flex-col items-start gap-5 mt-10 max-sm:[&_nav_ul]:flex-col max-sm:[&_nav_ul]:gap-4 max-sm:[&_nav_ul]:items-start'
-							buttonsClassName='max-sm:flex-col max-sm:items-start max-sm:gap-5'
-						/>
-					</DialogContent>
-				</Dialog>
-
-				<HeaderMenu className='max-lg:hidden' />
-			</Container>
+					</div>
+				</DialogTrigger>
+				<DialogContent className='sm:max-w-[425px] p-6'>
+					<DialogTitle className='text-xl font-semibold mb-6'>Меню</DialogTitle>
+					<HeaderMenu
+						variant='mobile'
+						navClassName='[&_ul]:flex-col [&_ul]:items-start [&_ul]:gap-4'
+					/>
+				</DialogContent>
+			</Dialog>
 		</header>
 	)
 }

@@ -1,10 +1,10 @@
 import { ChevronDownIcon } from 'lucide-react'
 import Link from 'next/link'
 
-export function HeaderNav() {
+export function HeaderNav({ className }: { className?: string }) {
 	return (
-		<nav>
-			<ul className='flex items-center gap-12 font-semibold text-sm'>
+		<nav className={className}>
+			<ul className='flex items-center gap-10 font-semibold text-sm text-white'>
 				<li>
 					<button className='flex items-center gap-4'>
 						Продукт

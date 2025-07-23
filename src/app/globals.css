@@ -128,7 +128,8 @@ button {
 }
 
 body {
-	color: #262626;
+	color: #fff;
+	background: #000;
 }
 
 .lava-background {
